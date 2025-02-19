@@ -7,3 +7,5 @@ langchain
 langchain_huggingface
 langchain_core
 pandas
+python-docx
+langchain-community
