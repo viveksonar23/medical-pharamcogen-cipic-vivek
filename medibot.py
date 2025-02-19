@@ -237,26 +237,23 @@ def load_llm2():
 
 def load_llm():
     """
-    Loads the Hugging Face LLM with a valid API token.
-    Ensures the HF_TOKEN is retrieved from Streamlit secrets or environment variables.
+    Loads the Hugging Face LLM with the API token and explicitly sets a task.
     """
-    HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
+    HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"  # Replace with your model
 
-    # Check for HF_TOKEN in Streamlit secrets (if running on Streamlit Cloud)
-    if "HF_TOKEN" in st.secrets:
-        HF_TOKEN = st.secrets["HF_TOKEN"]
-    # If not found in secrets, try getting it from environment variables
-    elif "HF_TOKEN" in os.environ:
-        HF_TOKEN = os.environ["HF_TOKEN"]
-    else:
-        st.error("❌ Hugging Face token is missing. Add it to Streamlit secrets or set it as an environment variable.")
+    # Retrieve the Hugging Face token from Streamlit secrets or environment variables
+    HF_TOKEN = os.getenv("HF_TOKEN", st.secrets.get("HF_TOKEN"))
+
+    if not HF_TOKEN:
+        st.error("❌ Hugging Face token is missing. Please add it to Streamlit secrets or as an environment variable.")
         return None
 
-    # Initialize the Hugging Face model
     try:
+        # ✅ Explicitly specify the task
         return HuggingFaceEndpoint(
             repo_id=HUGGINGFACE_REPO_ID,
             temperature=0.5,
+            task="text-generation",  # Make sure task matches the model type
             model_kwargs={"token": HF_TOKEN, "max_length": 1024}
         )
     except Exception as e:
