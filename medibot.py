@@ -20,7 +20,10 @@ import urllib.parse
 
 
 
-HF_TOKEN = os.getenv("HF_TOKEN")
+
+
+
+HF_TOKEN="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"
 
 # For DOCX support
 try:
@@ -211,7 +214,7 @@ def set_custom_prompt():
 def load_llm2():
     # Replace with the model repo ID for Falcon-7B-Instruct
     HUGGINGFACE_REPO_ID = "tiiuae/falcon-7b-instruct"
-    HF_TOKEN = os.environ.get("HF_TOKEN")
+    HF_TOKEN="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"
     if not HF_TOKEN:
         st.error("Hugging Face token is not set.")
         return None
@@ -224,7 +227,7 @@ def load_llm2():
 
 def load_llm():
     HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
-    HF_TOKEN = os.environ.get("HF_TOKEN")
+    HF_TOKEN="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"
     if not HF_TOKEN:
         st.error("Hugging Face token is not set.")
         return None
