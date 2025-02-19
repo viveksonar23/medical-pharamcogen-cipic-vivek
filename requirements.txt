@@ -1,0 +1,9 @@
+beautifulsoup4
+streamlit
+requests
+selenium
+webdriver-manager
+langchain
+langchain_huggingface
+langchain_core
+pandas
