@@ -9,4 +9,5 @@ langchain_core
 pandas
 python-docx
 langchain-community
-faiss-gpu
+faiss-cpu
+

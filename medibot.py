@@ -18,6 +18,10 @@ import pandas as pd
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 import urllib.parse
 
+
+
+HF_TOKEN = os.getenv("HF_TOKEN")
+
 # For DOCX support
 try:
     import docx
