@@ -9,5 +9,4 @@ langchain_core
 pandas
 python-docx
 langchain-community
---upgrade pip
 faiss-gpu==1.5.3
