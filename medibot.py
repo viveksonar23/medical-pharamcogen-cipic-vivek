@@ -20,7 +20,15 @@ import urllib.parse
 
 
 
-HF_TOKEN = os.getenv("HF_TOKEN")
+# HF_TOKEN = os.getenv("HF_TOKEN")
+
+
+
+if "HF_TOKEN" not in st.secrets:
+    st.error("❌ Hugging Face token is missing. Add it in Streamlit Secrets Manager!")
+    HF_TOKEN = None
+else:
+    HF_TOKEN = st.secrets["HF_TOKEN"]
 
 # For DOCX support
 try:
@@ -233,18 +241,27 @@ def load_llm():
     Ensures the HF_TOKEN is retrieved from Streamlit secrets or environment variables.
     """
     HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
-    HF_TOKEN = os.environ.get("HF_TOKEN")
-    if not HF_TOKEN:
-        st.error("Hugging Face token is not set.")
-        return None
-    
-    # Increased max_length for more detailed responses.
-    return HuggingFaceEndpoint(
-        repo_id=HUGGINGFACE_REPO_ID,
-        temperature=0.5,
-        model_kwargs={"token": HF_TOKEN, "max_length": 1024}
-    )
 
+    # Check for HF_TOKEN in Streamlit secrets (if running on Streamlit Cloud)
+    if "HF_TOKEN" in st.secrets:
+        HF_TOKEN = st.secrets["HF_TOKEN"]
+    # If not found in secrets, try getting it from environment variables
+    elif "HF_TOKEN" in os.environ:
+        HF_TOKEN = os.environ["HF_TOKEN"]
+    else:
+        st.error("❌ Hugging Face token is missing. Add it to Streamlit secrets or set it as an environment variable.")
+        return None
+
+    # Initialize the Hugging Face model
+    try:
+        return HuggingFaceEndpoint(
+            repo_id=HUGGINGFACE_REPO_ID,
+            temperature=0.5,
+            model_kwargs={"token": HF_TOKEN, "max_length": 1024}
+        )
+    except Exception as e:
+        st.error(f"🚨 Error initializing LLM: {str(e)}")
+        return None
 
 def load_l2m():
     # Replace with the correct repo ID for your DeepSeek model
