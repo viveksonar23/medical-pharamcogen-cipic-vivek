@@ -18,11 +18,6 @@ import pandas as pd
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 import urllib.parse
 
-
-
-
-
-
 HF_TOKEN="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"
 
 # For DOCX support
@@ -40,11 +35,16 @@ DATA_PATH = r"D:\new_gait\medical-chatbot-main\medical-chatbot-main\data"
 def get_vectorstore():
     try:
         embedding_model = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+        if not os.path.exists(DB_FAISS_PATH):
+            st.warning("FAISS vector store not found. Creating a new one...")
+            db = FAISS(embedding_model)  # Initialize FAISS
+            db.save_local(DB_FAISS_PATH)
         db = FAISS.load_local(DB_FAISS_PATH, embedding_model, allow_dangerous_deserialization=True)
         return db
     except Exception as e:
         st.error(f"Error loading FAISS vectorstore: {e}")
         return None
+
 
 def apply_custom_styles():
     st.markdown("""
@@ -225,19 +225,22 @@ def load_llm2():
         model_kwargs={"token": HF_TOKEN, "max_length": 1024}
     )
 
+
+
 def load_llm():
     HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
-    HF_TOKEN="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"
+    HF_TOKEN = st.secrets["HF_TOKEN"]  # Use secrets for security
+
     if not HF_TOKEN:
         st.error("Hugging Face token is not set.")
         return None
-    
-    # Increased max_length for more detailed responses.
+
     return HuggingFaceEndpoint(
         repo_id=HUGGINGFACE_REPO_ID,
-        temperature=0.5,
+        task="text-generation",  # ✅ Explicitly setting the task type
         model_kwargs={"token": HF_TOKEN, "max_length": 1024}
     )
+
 
 def load_l2m():
     # Replace with the correct repo ID for your DeepSeek model
