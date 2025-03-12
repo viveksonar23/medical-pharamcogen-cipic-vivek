@@ -10,4 +10,5 @@ pandas
 python-docx
 langchain-community
 faiss-cpu
+openpyxl
 
