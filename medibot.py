@@ -1,4 +1,10 @@
 import os
+os.environ["STREAMLIT_WATCHER_TYPE"] = "none"
+
+import streamlit as st
+import torch
+# ... rest of your imports
+
 import requests
 from bs4 import BeautifulSoup
 import streamlit as st
