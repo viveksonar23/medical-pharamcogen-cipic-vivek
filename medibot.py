@@ -439,7 +439,8 @@ def chatgpt_style_interface():
             # Append the user's message
             conv["messages"].append({"role": "user", "content": user_input})
             # Build query string with file context if available
-            query_input = f"{'File Content:\n' + file_context + '\n' if file_context else ''}{user_input}"
+            query_input = f"File Content:\n{file_context}\n{user_input}" if file_context else user_input
+
 
             vectorstore = get_vectorstore()
             if vectorstore is None:
