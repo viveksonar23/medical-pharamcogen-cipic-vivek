@@ -242,7 +242,7 @@ def set_custom_prompt():
 def load_llm():
     # Replace with the model repo ID for Falcon-7B-Instruct
     HUGGINGFACE_REPO_ID = "tiiuae/falcon-7b-instruct"
-    HF_TOKEN="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"
+    HF_TOKEN="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"
     if not HF_TOKEN:
         st.error("Hugging Face token is not set.")
         return None
