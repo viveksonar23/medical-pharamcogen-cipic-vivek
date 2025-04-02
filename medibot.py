@@ -44,6 +44,7 @@ SAVE_FOLDER = "downloaded_files"
 DATA_PATH = r"D:\new_gait\medical-chatbot-main\medical-chatbot-main\data"
 
 @st.cache_resource
+@st.cache_resource
 def get_vectorstore():
     try:
         embedding_model = HuggingFaceEmbeddings(
@@ -59,6 +60,8 @@ def get_vectorstore():
     except Exception as e:
         st.error(f"Error loading FAISS vectorstore: {e}")
         return None
+
+
 
 def apply_custom_styles():
     st.markdown("""
@@ -281,17 +284,16 @@ def load_llm2():
 
 def load_llm():
     # Replace with the correct repo ID for your DeepSeek model
-    HUGGINGFACE_REPO_ID = "HuggingFaceH4/zephyr-7b-alpha"  # Update to your model's repo id
+    HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"  # Update to your model's repo id
     HF_TOKEN = os.getenv("HF_TOKEN", st.secrets.get("HF_TOKEN"))
     if not HF_TOKEN:
         st.error("Hugging Face token is not set.")
         return None
-
+    
     return HuggingFaceEndpoint(
         repo_id=HUGGINGFACE_REPO_ID,
         temperature=0.5,
-        max_length=1024,
-        huggingfacehub_api_token=HF_TOKEN
+        model_kwargs={"token": HF_TOKEN, "max_length": 1024}
     )
 
 
@@ -437,9 +439,7 @@ def chatgpt_style_interface():
             # Append the user's message
             conv["messages"].append({"role": "user", "content": user_input})
             # Build query string with file context if available
-            file_content_prefix = f"File Content:\n{file_context}\n" if file_context else ""
-            query_input = f"{file_content_prefix}{user_input}"
-
+            query_input = f"{'File Content:\n' + file_context + '\n' if file_context else ''}{user_input}"
 
             vectorstore = get_vectorstore()
             if vectorstore is None:
