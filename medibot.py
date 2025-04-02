@@ -281,7 +281,7 @@ def load_llm2():
 
 def load_llm():
     # Replace with the correct repo ID for your DeepSeek model
-    HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"  # Update to your model's repo id
+    HUGGINGFACE_REPO_ID = "HuggingFaceH4/zephyr-7b-alpha"  # Update to your model's repo id
     HF_TOKEN = os.getenv("HF_TOKEN", st.secrets.get("HF_TOKEN"))
     if not HF_TOKEN:
         st.error("Hugging Face token is not set.")
