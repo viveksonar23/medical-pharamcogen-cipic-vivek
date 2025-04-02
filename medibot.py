@@ -239,7 +239,7 @@ def set_custom_prompt():
 
 
 
-def load_llm2():
+def load_llm():
     # Replace with the model repo ID for Falcon-7B-Instruct
     HUGGINGFACE_REPO_ID = "tiiuae/falcon-7b-instruct"
     HF_TOKEN="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"
@@ -253,33 +253,33 @@ def load_llm2():
         model_kwargs={"token": HF_TOKEN, "max_length": 1024}
     )
 
-def load_llm():
-    """
-    Loads the Hugging Face LLM with a valid API token.
-    Ensures the HF_TOKEN is retrieved from Streamlit secrets or environment variables.
-    """
-    HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
+# def load_llm():
+#     """
+#     Loads the Hugging Face LLM with a valid API token.
+#     Ensures the HF_TOKEN is retrieved from Streamlit secrets or environment variables.
+#     """
+#     HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
 
-    # Check for HF_TOKEN in Streamlit secrets (if running on Streamlit Cloud)
-    if "HF_TOKEN" in st.secrets:
-        HF_TOKEN = st.secrets["HF_TOKEN"]
-    # If not found in secrets, try getting it from environment variables
-    elif "HF_TOKEN" in os.environ:
-        HF_TOKEN = os.environ["HF_TOKEN"]
-    else:
-        st.error("❌ Hugging Face token is missing. Add it to Streamlit secrets or set it as an environment variable.")
-        return None
+#     # Check for HF_TOKEN in Streamlit secrets (if running on Streamlit Cloud)
+#     if "HF_TOKEN" in st.secrets:
+#         HF_TOKEN = st.secrets["HF_TOKEN"]
+#     # If not found in secrets, try getting it from environment variables
+#     elif "HF_TOKEN" in os.environ:
+#         HF_TOKEN = os.environ["HF_TOKEN"]
+#     else:
+#         st.error("❌ Hugging Face token is missing. Add it to Streamlit secrets or set it as an environment variable.")
+#         return None
 
-    # Initialize the Hugging Face model
-    try:
-        return HuggingFaceEndpoint(
-            repo_id=HUGGINGFACE_REPO_ID,
-            temperature=0.5,
-            model_kwargs={"token": HF_TOKEN, "max_length": 1024}
-        )
-    except Exception as e:
-        st.error(f"🚨 Error initializing LLM: {str(e)}")
-        return None
+#     # Initialize the Hugging Face model
+#     try:
+#         return HuggingFaceEndpoint(
+#             repo_id=HUGGINGFACE_REPO_ID,
+#             temperature=0.5,
+#             model_kwargs={"token": HF_TOKEN, "max_length": 1024}
+#         )
+#     except Exception as e:
+#         st.error(f"🚨 Error initializing LLM: {str(e)}")
+#         return None
 
 
 # def load_llm():
