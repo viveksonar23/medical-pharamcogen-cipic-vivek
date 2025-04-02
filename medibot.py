@@ -257,8 +257,20 @@ def load_llm2():
 from langchain_huggingface import HuggingFaceEndpoint
 import streamlit as st
 
+# def load_llm():
+#     HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
+#     HF_TOKEN = st.secrets["HF_TOKEN"]  # ✅ read token securely from secrets
+
+#     return HuggingFaceEndpoint(
+#         repo_id=HUGGINGFACE_REPO_ID,
+#         task="text-generation",  # ✅ required
+#         temperature=0.5,
+#         model_kwargs={"max_length": 1024},
+#         huggingfacehub_api_token=HF_TOKEN
+#     )
+
 def load_llm():
-    HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
+    HUGGINGFACE_REPO_ID = "HuggingFaceH4/zephyr-7b-beta"
     HF_TOKEN = st.secrets["HF_TOKEN"]  # ✅ read token securely from secrets
 
     return HuggingFaceEndpoint(
@@ -268,22 +280,6 @@ def load_llm():
         model_kwargs={"max_length": 1024},
         huggingfacehub_api_token=HF_TOKEN
     )
-
-# def load_llm():
-#     # Replace with the correct repo ID for your DeepSeek model
-#     HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"  # Update to your model's repo id
-
-#     HF_TOKEN=""
-
-#     if not HF_TOKEN:
-#         st.error("Hugging Face token is not set.")
-#         return None
-    
-#     return HuggingFaceEndpoint(
-#         repo_id=HUGGINGFACE_REPO_ID,
-#         temperature=0.5,
-#         model_kwargs={"token": HF_TOKEN, "max_length": 1024}
-#     )
 
 def load_llm11():
     from langchain.llms import OpenAI
