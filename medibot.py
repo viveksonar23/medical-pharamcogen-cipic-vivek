@@ -237,9 +237,31 @@ def set_custom_prompt():
     )
 
 
-
-
 def load_llm():
+    HUGGINGFACE_REPO_ID = "HuggingFaceH4/zephyr-7b-beta"  # ✅ Replace with a supported one
+    HF_TOKEN = os.getenv("HF_TOKEN", st.secrets.get("HF_TOKEN"))
+
+    if not HF_TOKEN:
+        st.error("❌ Hugging Face token is missing.")
+        return None
+
+    try:
+        return HuggingFaceEndpoint(
+            repo_id=HUGGINGFACE_REPO_ID,
+            task="text-generation",  # ✅ explicitly state the task
+            temperature=0.5,
+            model_kwargs={
+                "max_new_tokens": 1024,
+                "top_p": 0.95,
+                "do_sample": True
+            }
+        )
+    except Exception as e:
+        st.error(f"🚨 Error initializing LLM: {str(e)}")
+        return None
+
+
+def load_llm2():
     # Replace with the model repo ID for Falcon-7B-Instruct
     HUGGINGFACE_REPO_ID = "tiiuae/falcon-7b-instruct"
     HF_TOKEN="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"
@@ -282,19 +304,6 @@ def load_llm():
 #         return None
 
 
-# def load_llm():
-#     # Replace with the correct repo ID for your DeepSeek model
-#     HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"  # Update to your model's repo id
-#     HF_TOKEN = os.getenv("HF_TOKEN", st.secrets.get("HF_TOKEN"))
-#     if not HF_TOKEN:
-#         st.error("Hugging Face token is not set.")
-#         return None
-    
-#     return HuggingFaceEndpoint(
-#         repo_id=HUGGINGFACE_REPO_ID,
-#         temperature=0.5,
-#         model_kwargs={"token": HF_TOKEN, "max_length": 1024}
-#     )
 
 
 def load_l2m():
