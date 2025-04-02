@@ -18,21 +18,21 @@ import pandas as pd
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 import urllib.parse
 from langchain.llms import OpenAI
-HF_TOKEN = os.getenv("HF_TOKEN")
+os.environ["STREAMLIT_WATCHER_TYPE"] = "none"
+
 
 if "HF_TOKEN" not in st.secrets:
     st.error("❌ Hugging Face token is missing. Add it in Streamlit Secrets Manager!")
     HF_TOKEN = None
 else:
     HF_TOKEN = st.secrets["HF_TOKEN"]
-
 # if "HF_TOKEN" not in st.secrets:
 #     st.error("❌ Hugging Face token is missing. Add it in Streamlit Secrets Manager!")
 #     HF_TOKEN = None
 # else:
 #     HF_TOKEN = st.secrets["HF_TOKEN"]
-
 # For DOCX support
+
 try:
     import docx
 except ImportError:
@@ -43,7 +43,6 @@ DB_FAISS_PATH = "vectorstore/db_faiss"
 SAVE_FOLDER = "downloaded_files"
 DATA_PATH = r"D:\new_gait\medical-chatbot-main\medical-chatbot-main\data"
 
-@st.cache_resource
 @st.cache_resource
 def get_vectorstore():
     try:
@@ -60,7 +59,6 @@ def get_vectorstore():
     except Exception as e:
         st.error(f"Error loading FAISS vectorstore: {e}")
         return None
-
 
 
 def apply_custom_styles():
@@ -236,35 +234,10 @@ def set_custom_prompt():
         input_variables=["context", "question"]
     )
 
-
-# def load_llm():
-#     HUGGINGFACE_REPO_ID = "HuggingFaceH4/zephyr-7b-beta"  # ✅ Replace with a supported one
-#     HF_TOKEN = os.getenv("HF_TOKEN", st.secrets.get("HF_TOKEN"))
-
-#     if not HF_TOKEN:
-#         st.error("❌ Hugging Face token is missing.")
-#         return None
-
-#     try:
-#         return HuggingFaceEndpoint(
-#             repo_id=HUGGINGFACE_REPO_ID,
-#             task="text-generation",  # ✅ explicitly state the task
-#             temperature=0.5,
-#             model_kwargs={
-#                 "max_new_tokens": 1024,
-#                 "top_p": 0.95,
-#                 "do_sample": True
-#             }
-#         )
-#     except Exception as e:
-#         st.error(f"🚨 Error initializing LLM: {str(e)}")
-#         return None
-
-
 def load_llm2():
     # Replace with the model repo ID for Falcon-7B-Instruct
     HUGGINGFACE_REPO_ID = "tiiuae/falcon-7b-instruct"
-    HF_TOKEN="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"
+   
     if not HF_TOKEN:
         st.error("Hugging Face token is not set.")
         return None
@@ -303,8 +276,35 @@ def load_llm():
         st.error(f"🚨 Error initializing LLM: {str(e)}")
         return None
 
+# def load_llm():
+#     # Replace with the correct repo ID for your DeepSeek model
+#     HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"  # Update to your model's repo id
 
+#     HF_TOKEN=""
 
+#     if not HF_TOKEN:
+#         st.error("Hugging Face token is not set.")
+#         return None
+    
+#     return HuggingFaceEndpoint(
+#         repo_id=HUGGINGFACE_REPO_ID,
+#         temperature=0.5,
+#         model_kwargs={"token": HF_TOKEN, "max_length": 1024}
+#     )
+
+def load_llm11():
+    from langchain.llms import OpenAI
+    # Make sure your OpenAI API key is set as an environment variable (e.g., OPENAI_API_KEY)
+    if not api_key:
+        st.error("OpenAI API key is not set. Please set it in your environment or Streamlit secrets.")
+        return None
+    try:
+        # Instantiate the OpenAI LLM (using gpt-3.5-turbo by default)
+        llm = OpenAI(temperature=0.5, max_tokens=1024, openai_api_key=api_key)
+        return llm
+    except Exception as e:
+        st.error(f"Error loading ChatGPT LLM: {e}")
+        return None
 
 def load_l2m():
     # Replace with the correct repo ID for your DeepSeek model
@@ -448,8 +448,7 @@ def chatgpt_style_interface():
             # Append the user's message
             conv["messages"].append({"role": "user", "content": user_input})
             # Build query string with file context if available
-            query_input = f"File Content:\n{file_context}\n{user_input}" if file_context else user_input
-
+            query_input = f"{'File Content:\n' + file_context + '\n' if file_context else ''}{user_input}"
 
             vectorstore = get_vectorstore()
             if vectorstore is None:
