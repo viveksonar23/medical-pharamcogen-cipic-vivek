@@ -286,11 +286,12 @@ def load_llm():
     if not HF_TOKEN:
         st.error("Hugging Face token is not set.")
         return None
-    
+
     return HuggingFaceEndpoint(
         repo_id=HUGGINGFACE_REPO_ID,
         temperature=0.5,
-        model_kwargs={"token": HF_TOKEN, "max_length": 1024}
+        max_length=1024,
+        huggingfacehub_api_token=HF_TOKEN
     )
 
 
