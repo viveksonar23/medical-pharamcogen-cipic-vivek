@@ -46,17 +46,19 @@ DATA_PATH = r"D:\new_gait\medical-chatbot-main\medical-chatbot-main\data"
 @st.cache_resource
 def get_vectorstore():
     try:
-        embedding_model = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+        embedding_model = HuggingFaceEmbeddings(
+            model_name='sentence-transformers/all-MiniLM-L6-v2',
+            model_kwargs={"use_auth_token": HF_TOKEN}
+        )
         if not os.path.exists(DB_FAISS_PATH):
             st.warning("FAISS vector store not found. Creating a new one...")
-            db = FAISS(embedding_model)  # Initialize FAISS
+            db = FAISS(embedding_model)
             db.save_local(DB_FAISS_PATH)
         db = FAISS.load_local(DB_FAISS_PATH, embedding_model, allow_dangerous_deserialization=True)
         return db
     except Exception as e:
         st.error(f"Error loading FAISS vectorstore: {e}")
         return None
-
 
 def apply_custom_styles():
     st.markdown("""
