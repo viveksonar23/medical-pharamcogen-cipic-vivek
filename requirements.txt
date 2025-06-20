@@ -12,4 +12,5 @@ langchain-community
 faiss-cpu
 openpyxl
 torch
+sentence-transformers
 
