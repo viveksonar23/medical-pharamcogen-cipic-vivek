@@ -11,4 +11,5 @@ python-docx
 langchain-community
 faiss-cpu
 openpyxl
+torch
 
